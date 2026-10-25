@@ -1,25 +1,44 @@
-# Image Gallery — Galeria web experimental
+<div align="center">
+  <h1>🖼️ Image Gallery</h1>
+  <p><strong>Uma galeria experimental de imagens com interface web e rotina PHP de recebimento.</strong></p>
+  <p><img alt="HTML5" src="https://img.shields.io/badge/HTML5-Interface-E34F26?logo=html5&logoColor=white"> <img alt="PHP" src="https://img.shields.io/badge/PHP-Servidor-777BB4?logo=php&logoColor=white"> <img alt="Status" src="https://img.shields.io/badge/status-projeto%20de%20estudo-64748b"></p>
+</div>
 
-**Projeto legado de galeria de imagens com interface HTML/CSS/JavaScript e endpoint PHP.**
+## Sobre
 
-## Estrutura
+Este repositório reúne uma **interface de galeria** feita com HTML, CSS e JavaScript e uma rotina PHP separada para operações de envio/recebimento. É uma experiência antiga de frontend e integração com servidor, não um serviço de hospedagem de imagens pronto para uso público.
 
-| Caminho | Conteúdo |
+## Conteúdo
+
+| Arquivo | Finalidade |
 | --- | --- |
-| `index.html` | Página inicial |
-| `enviado.html` | Página auxiliar |
-| `css/`, `js/` | Interface e interações |
-| `img/` | Recursos visuais |
-| `save.php` | Rotina PHP relacionada ao armazenamento/envio |
+| `index.html` | Página da galeria |
+| `enviado.html` | Página auxiliar do fluxo de envio |
+| `js/script.js` | Comportamentos da interface |
+| `css/` | Apresentação visual |
+| `img/` | Imagens de demonstração |
+| `save.php` | Operação PHP relacionada a arquivos |
 
-## Executar
+## Executar no computador
 
-Para ver a interface, abra os HTMLs por um servidor local. Para testar a parte PHP, use um ambiente PHP configurado. A presença do arquivo `save.php` **não garante que uploads estejam seguros ou funcionais** em hospedagem moderna.
+Requer PHP para testar também o endpoint de servidor:
 
-## Antes de publicar
+```bash
+git clone https://github.com/HelioConde/Image_Gallery.git
+cd Image_Gallery
+php -S 127.0.0.1:8000
+```
 
-Revisar validação de tipos e tamanho de arquivos, permissões, caminhos de gravação, autenticação e exposição de mídia. Não disponibilize upload público sem testes e controles apropriados.
+Acesse `http://127.0.0.1:8000`. Para testar apenas a apresentação HTML, basta um servidor estático.
 
-**Status:** estudo legado, sem homologação atual documentada.
+## Segurança antes de publicar
 
-[Projetos de Hélio Conde](https://github.com/HelioConde?tab=repositories).
+**Não exponha `save.php` na internet sem auditoria.** Em fluxos de upload é essencial verificar tipos MIME, extensão real, tamanho, caminho de destino e nomes dos arquivos; também é preciso impedir execução dos conteúdos enviados, limitar requisições e controlar acesso.
+
+Nenhuma dessas proteções foi validada nesta revisão de README. Use **somente imagens fictícias** durante os testes.
+
+## Evoluções sugeridas
+
+Melhorar visualização responsiva, estados de erro, acessibilidade da galeria e documentação dos formatos aceitos. Adicionar testes do fluxo de envio antes de considerar disponibilização pública.
+
+Criado por [Hélio Conde](https://github.com/HelioConde).
