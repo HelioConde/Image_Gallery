@@ -9,6 +9,9 @@ test('galeria carrega 9 fotografias e cabe na largura da tela', async ({ page },
   await expect(page.locator('#selectedCount')).toHaveText('0 fotos selecionadas');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
+  await expect.poll(async () => page.locator('.photo-preview img').evaluateAll(
+    (images) => images.every((img) => img.complete && img.naturalWidth > 0)
+  )).toBe(true);
   fs.mkdirSync('test-results/screenshots', { recursive: true });
   await page.screenshot({ path: 'test-results/screenshots/' + testInfo.project.name + '-gallery.png', fullPage: true });
 });
