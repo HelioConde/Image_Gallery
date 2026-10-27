@@ -21,7 +21,7 @@ Modernização de uma antiga galeria: **explorar imagens, selecionar várias e r
     cd Image_Gallery
     python3 -m http.server 4173
 
-Acesse http://localhost:4173/?demo=1. O GitHub Pages ativa demonstração automaticamente. Seleção, favoritos, filtros, compartilhamento e exportação CSV funcionam. **GitHub Pages não executa PHP** e o envio fica indisponível.
+Acesse http://localhost:4173/?demo=1. O GitHub Pages ativa o modo estático automaticamente. Seleção, favoritos, filtros e compartilhamento funcionam. Ao concluir com seu nome, o navegador **baixa um CSV com a seleção**, sem servidor e sem banco de dados. GitHub Pages não executa PHP.
 
 ## Backend PHP — instalação segura
 PHP 8.1+ e diretório privado pré-criado e gravável, **fora do document root**:
@@ -44,8 +44,10 @@ Requer Node.js 20+ e PHP 8.1+:
     npm run test:php
     npx playwright install chromium
     npm run test:e2e
+    npm run test:visual
+    npm run qa:report
 
-A integração contínua em .github/workflows/quality.yml executa as verificações e gera capturas de tela dos cenários E2E.
+A integração contínua executa testes funcionais, 22 capturas em 9 resoluções e auditoria de erros JavaScript, rede e layout. A publicação só ocorre após os testes passarem e é auditada novamente no endereço público. Consulte [Auditoria visual](docs/VISUAL_AUDIT.md) para relatórios e instruções.
 
 ## Estrutura
 | Caminho | Descrição |
@@ -57,7 +59,8 @@ A integração contínua em .github/workflows/quality.yml executa as verificaç�
 | save.php | Registro privado de seleções |
 | enviado.html | Compatibilidade de links antigos |
 | docs/DESIGN_SYSTEM.md | Design system |
-| tests/ | Testes automatizados |
+| tests/ | Testes automatizados e auditoria visual |
+| docs/VISUAL_AUDIT.md | Capturas de tela, erros e publicação |
 | .github/workflows/quality.yml | CI |
 
 ## Privacidade e roadmap
