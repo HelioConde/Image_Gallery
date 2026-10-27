@@ -12,6 +12,18 @@ test('galeria carrega 9 fotografias e cabe na largura da tela', async ({ page },
   await expect.poll(async () => page.locator('.photo-preview img').evaluateAll(
     (images) => images.every((img) => img.complete && img.naturalWidth > 0)
   )).toBe(true);
+  // Screenshot tools do not always rasterize offscreen images even after download.
+  // Visit the full viewport range once to check the painted mobile/desktop experience.
+  await page.evaluate(async () => {
+    const tick = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const distance = Math.max(250, Math.round(innerHeight * 0.7));
+    for (let y = 0; y < document.documentElement.scrollHeight; y += distance) {
+      scrollTo(0, y);
+      await tick();
+    }
+    scrollTo(0, 0);
+    await tick();
+  });
   fs.mkdirSync('test-results/screenshots', { recursive: true });
   await page.screenshot({ path: 'test-results/screenshots/' + testInfo.project.name + '-gallery.png', fullPage: true });
 });
