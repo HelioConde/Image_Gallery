@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const remoteBaseURL = process.env.VISUAL_BASE_URL?.replace(/\\/?$/, '/');
+const remoteBaseURL = process.env.VISUAL_BASE_URL ? (process.env.VISUAL_BASE_URL.endsWith('/') ? process.env.VISUAL_BASE_URL : process.env.VISUAL_BASE_URL + '/') : undefined;
 
 export default defineConfig({
   testDir: './tests/visual',
