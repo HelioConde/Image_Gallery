@@ -10,6 +10,7 @@ const widths = [
   { width: 768, height: 1024, label: 'tablet' },
   { width: 1024, height: 768, label: 'tablet-paisagem' },
   { width: 1280, height: 800, label: 'notebook' },
+  { width: 1366, height: 650, label: 'notebook-browser-real' },
   { width: 1440, height: 900, label: 'desktop' },
   { width: 1600, height: 900, label: 'desktop-wide' },
   { width: 1920, height: 1080, label: 'full-hd' },
@@ -114,8 +115,23 @@ async function audit(page, data, section, filename) {
     await page.screenshot({ path: image, fullPage: true, animations: 'disabled' });
     screenshots.push(path.relative(OUTPUT, image).replaceAll(path.sep, '/'));
 
-    if (section === 'inicio' && (data.width === 390 || data.width === 1440)) {
+    if (section === 'inicio' && (data.width === 390 || data.width === 1366 || data.width === 1440)) {
       await page.locator('.select-toggle input').first().check();
+      await expect(page.locator('#selectionBar')).toBeVisible();
+      const inlineLayout = await page.evaluate(() => {
+        const bar = document.querySelector('#selectionBar');
+        const last = document.querySelector('.photo-card:last-child');
+        const barRect = bar.getBoundingClientRect();
+        const cardRect = last.getBoundingClientRect();
+        return {
+          style: getComputedStyle(bar).position,
+          intersectsPhotos: barRect.left < cardRect.right && barRect.right > cardRect.left &&
+            barRect.top < cardRect.bottom && barRect.bottom > cardRect.top,
+        };
+      });
+      if (inlineLayout.style === 'fixed' || inlineLayout.style === 'sticky' || inlineLayout.intersectsPhotos) {
+        metrics.issues.push({ type: 'selection-bar-obscures-photo', ...inlineLayout });
+      }
       const selected = path.join(fileDir, 'inicio-selecionada.png');
       await page.screenshot({ path: selected, fullPage: true, animations: 'disabled' });
       screenshots.push(path.relative(OUTPUT, selected).replaceAll(path.sep, '/'));
