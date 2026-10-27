@@ -1,0 +1,16 @@
+{
+  "name": "image-gallery",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Galeria acessível para seleção de fotografias",
+  "scripts": {
+    "test:static": "node --test tests/catalog.test.mjs",
+    "test:php": "bash tests/php-security.sh",
+    "test:e2e": "playwright test",
+    "test": "npm run test:static && npm run test:php && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
