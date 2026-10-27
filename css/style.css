@@ -40,7 +40,9 @@ h1, h2, h3 { letter-spacing: -.04em; }
 h1 { margin: .65rem 0 .55rem; font-size: clamp(2rem, 3.4vw, 3.1rem); line-height: 1.13; }
 h1 span { color: var(--brand); }
 .intro > p { color: var(--muted); max-width: 590px; font-size: 1rem; margin-bottom: 0; }
-.notice { margin-top: 1.25rem; background: #1b2944; border: 1px solid #455f9b; padding: .7rem .9rem; border-radius: var(--radius); color: #e8ecff; font-size: .9rem; }
+/* The hosting disclaimer belongs to the footer, not the hero or the photo area. */
+.hosting-note { margin: 0 0 1.15rem; padding: .75rem .95rem; border: 1px solid #34445f; border-radius: .8rem; background: #141e30; color: #b8c6dd; font-size: .78rem; line-height: 1.5; }
+.hosting-note::before { content: "ⓘ"; color: var(--brand); font-weight: 800; margin-right: .45rem; }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .85rem; }
 .section-heading h2 { font-size: clamp(1.45rem, 2vw, 1.85rem); margin-bottom: .1rem; }
 .section-heading p { color: var(--muted); margin: 0; font-size: .88rem; }
@@ -54,12 +56,12 @@ h1 span { color: var(--brand); }
 .button-quiet { color: var(--muted); background: transparent; }
 .button-quiet:hover { color: var(--text); background: var(--surface-hover); }
 .button-small { font-size: .81rem; padding: .6rem .75rem; min-height: 39px; }
-.button:disabled { opacity: .45; cursor: not-allowed; }
+.button:disabled { opacity: .56; cursor: not-allowed; }
 .filterbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: .8rem; }
 .tabs { display: flex; align-items: center; gap: .2rem; padding: 4px; background: #121b2a; border: 1px solid var(--border); border-radius: .75rem; }
 .tab { border: 0; color: var(--muted); background: transparent; padding: .56rem .9rem; min-height: 40px; border-radius: .55rem; font-size: .84rem; font-weight: 700; white-space: nowrap; }
 .tab:hover { color: var(--text); }
-.tab.is-active { background: #293750; color: var(--text); }
+.tab.is-active { background: #293750; color: var(--text); box-shadow: inset 0 0 0 1px rgba(133,152,255,.17); }
 .tab span { display: inline-block; margin-left: .35rem; padding: .05rem .36rem; border-radius: .35rem; background: #3a4c6a; font-size: .77rem; }
 .search { display: flex; align-items: center; gap: .6rem; width: min(270px,100%); min-height: 45px; padding: 0 .9rem; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: .75rem; }
 .search:focus-within { outline: 2px solid var(--brand); outline-offset: 2px; }
@@ -68,7 +70,7 @@ h1 span { color: var(--brand); }
 .search input::placeholder { color: var(--subtle); }
 .gallery-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .9rem; min-height: 140px; }
 .photo-card { position: relative; overflow: hidden; background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); transition: border-color .16s ease, transform .16s ease; }
-.photo-card.is-selected { border-color: var(--brand); }
+.photo-card.is-selected { border-color: var(--brand); box-shadow: 0 0 0 1px rgba(133,152,255,.3); }
 .photo-card:hover { border-color: #667fbb; }
 .photo-card.is-selected:hover { border-color: #a8b6ff; }
 .photo-preview { width: 100%; padding: 0; border: 0; background: #202a3a; display: block; position: relative; aspect-ratio: 4/3; overflow: hidden; }
@@ -99,7 +101,8 @@ h1 span { color: var(--brand); }
 .send-form label span { color: var(--brand); }
 .send-form input { min-height: 50px; background: #0b1221; color: var(--text); border: 1px solid #394b67; border-radius: .7rem; padding: .8rem .95rem; }
 .send-form input::placeholder { color: #8492a9; }
-.field-hint, .form-feedback { font-size: .78rem; color: var(--muted); margin: 0 0 .5rem; min-height: 1.2em; }
+.field-hint, .form-feedback { font-size: .81rem; color: var(--muted); margin: 0 0 .5rem; min-height: 1.2em; }
+.field-hint.has-selection { color: #bad2f6; }
 .form-feedback.is-error { color: var(--danger); }
 .form-feedback.is-success { color: var(--success); }
 .site-footer { border-top: 1px solid var(--border); }
