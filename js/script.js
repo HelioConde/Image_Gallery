@@ -92,7 +92,7 @@ function renderCard(photo) {
   const img = element('img');
   img.src = photo.src;
   img.alt = photo.alt;
-  img.loading = 'lazy';
+  img.loading = photos.length <= 12 ? 'eager' : 'lazy';
   img.decoding = 'async';
   img.width = 480;
   img.height = 360;
