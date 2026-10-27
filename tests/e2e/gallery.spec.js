@@ -27,6 +27,41 @@ test('galeria carrega 9 fotografias e cabe na largura da tela', async ({ page },
   fs.mkdirSync('test-results/screenshots', { recursive: true });
   await page.screenshot({ path: 'test-results/screenshots/' + testInfo.project.name + '-gallery.png', fullPage: true });
 });
+test('barra de seleção nunca cobre as fotos e desaparece quando vazia', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 650 });
+  const bar = page.locator('#selectionBar');
+  await expect(bar).toBeHidden();
+  await page.locator('.select-toggle input').first().check();
+  await expect(bar).toBeVisible();
+  await expect(bar.locator('#selectedCount')).toHaveText('1 foto selecionada');
+  const positions = await page.evaluate(() => {
+    const dock = document.querySelector('#selectionBar');
+    const gallery = document.querySelector('#gallery');
+    const lastCard = gallery.lastElementChild;
+    const rectangle = dock.getBoundingClientRect();
+    return {
+      dockPosition: getComputedStyle(dock).position,
+      dockTop: rectangle.top + scrollY,
+      lastCardBottom: lastCard.getBoundingClientRect().bottom + scrollY,
+      horizontalOverflow: document.documentElement.scrollWidth > innerWidth + 1,
+      afterGallery: gallery.compareDocumentPosition(dock) & Node.DOCUMENT_POSITION_FOLLOWING,
+    };
+  });
+  expect(positions.dockPosition).not.toBe('fixed');
+  expect(positions.dockPosition).not.toBe('sticky');
+  expect(positions.dockTop).toBeGreaterThanOrEqual(positions.lastCardBottom - 1);
+  expect(positions.horizontalOverflow).toBe(false);
+  expect(positions.afterGallery).toBeTruthy();
+  await page.locator('#clearAll').click();
+  await expect(bar).toBeHidden();
+});
+test('1366px desktop distribui as nove fotos em apenas duas linhas', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 650 });
+  const rows = await page.locator('.photo-card').evaluateAll((cards) =>
+    new Set(cards.map((card) => Math.round(card.offsetTop))).size);
+  expect(rows).toBe(2);
+});
+
 test('seleciona, filtra e limpa as imagens sem perder consistência', async ({ page }) => {
   await page.locator('.select-toggle input').first().check();
   await expect(page.locator('#selectedCount')).toHaveText('1 foto selecionada');

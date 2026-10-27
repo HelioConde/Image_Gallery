@@ -14,11 +14,12 @@ O Playwright captura a página inteira de **Início** e a página de compatibili
 | Tablet | 768×1024 |
 | Tablet horizontal | 1024×768 |
 | Notebook | 1280×800 |
+| Browser real do usuário | 1366×650 |
 | Desktop | 1440×900 |
 | Desktop panorâmico | 1600×900 |
 | Full HD | 1920×1080 |
 
-Nos perfis 390 e 1440 o relatório também fotografa a galeria com seleção ativa e com o visualizador aberto. São **22 capturas por auditoria** e 18 verificações de páginas.
+Nos perfis 390, 1366 e 1440 o relatório também fotografa a galeria com seleção ativa e com o visualizador aberto. São **26 capturas por auditoria** e 20 verificações de páginas. Inclui também checagem de que o resumo de seleção não se sobrepõe às fotografias em 390, 1366 e 1440 px.
 
 ## O que gera erro no pipeline
 - **JavaScript:** exceções de página e mensagens `console.error`.

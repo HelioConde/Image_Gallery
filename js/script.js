@@ -54,6 +54,8 @@ function updateSummary() {
   const count = selected.size;
   $('#selectedCount').textContent = count === 1 ? '1 foto selecionada' : count + ' fotos selecionadas';
   $('#tabCount').textContent = String(count);
+  // The selection summary stays below the gallery and never obscures photographs.
+  $('#selectionBar').hidden = count === 0;
   $('#gallerySummary').textContent = photos.length === 1 ? '1 fotografia disponível' : photos.length + ' fotografias disponíveis';
   $('#selectAll').disabled = visiblePhotos().length === 0;
   $('#clearAll').disabled = count === 0;

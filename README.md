@@ -8,6 +8,8 @@
 Modernização de uma antiga galeria: **explorar imagens, selecionar várias e registrar escolhas pelo nome**. Preserva as nove imagens originais, com CSS moderno e JavaScript modular. **Não permite upload** nem hospeda fotos de terceiros.
 
 ## Funcionalidades
+A barra de seleção fica abaixo da grade, aparece apenas quando houver fotos selecionadas e não cobre as imagens nem o rodapé. A grade usa cinco colunas em telas largas, preservando as imagens originais.
+
 - Grade responsiva, busca e filtros (todas, selecionadas e favoritas).
 - Seleção múltipla, selecionar visíveis e limpar seleção.
 - Visualizador ampliado acessível, teclado Escape e setas; botões no celular.
@@ -47,7 +49,7 @@ Requer Node.js 20+ e PHP 8.1+:
     npm run test:visual
     npm run qa:report
 
-A integração contínua executa testes funcionais, 22 capturas em 9 resoluções e auditoria de erros JavaScript, rede e layout. A publicação só ocorre após os testes passarem e é auditada novamente no endereço público. Consulte [Auditoria visual](docs/VISUAL_AUDIT.md) para relatórios e instruções.
+A integração contínua executa testes funcionais, 26 capturas em 10 resoluções e auditoria de erros JavaScript, rede e layout. A publicação só ocorre após os testes passarem e é auditada novamente no endereço público. Consulte [Auditoria visual](docs/VISUAL_AUDIT.md) para relatórios e instruções.
 
 ## Estrutura
 | Caminho | Descrição |
