@@ -7,6 +7,9 @@
 ## O projeto
 Modernização de uma antiga galeria: **explorar imagens, selecionar várias e registrar escolhas pelo nome**. Preserva as nove imagens originais, com CSS moderno e JavaScript modular. **Não permite upload** nem hospeda fotos de terceiros.
 
+## Ajustes de experiência
+No GitHub Pages, o aviso de operação local fica **no rodapé, depois do formulário**, sem ocupar o topo da galeria. A busca mostra a quantidade de resultados e o formulário confirma quantas fotografias estão prontas para exportar. Os links compartilhados incluem apenas os IDs das fotografias, não parâmetros de campanhas.
+
 ## Funcionalidades
 A barra de seleção fica abaixo da grade, aparece apenas quando houver fotos selecionadas e não cobre as imagens nem o rodapé. A grade usa cinco colunas em telas largas, preservando as imagens originais.
 

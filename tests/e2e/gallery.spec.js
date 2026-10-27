@@ -27,6 +27,43 @@ test('galeria carrega 9 fotografias e cabe na largura da tela', async ({ page },
   fs.mkdirSync('test-results/screenshots', { recursive: true });
   await page.screenshot({ path: 'test-results/screenshots/' + testInfo.project.name + '-gallery.png', fullPage: true });
 });
+test('aviso do GitHub Pages aparece somente no rodapé, após o formulário', async ({ page }) => {
+  const note = page.locator('#demoNote');
+  await expect(note).toBeVisible();
+  await expect(note).toHaveText('Modo GitHub Pages: sua seleção funciona neste navegador. Ao concluir, um arquivo CSV será baixado; não há envio a servidor.');
+  await expect(page.locator('.intro #demoNote')).toHaveCount(0);
+  const position = await page.evaluate(() => {
+    const note = document.querySelector('#demoNote');
+    const footer = document.querySelector('footer');
+    const form = document.querySelector('#enviar');
+    const intro = document.querySelector('.intro');
+    const absoluteTop = (element) => element.getBoundingClientRect().top + window.scrollY;
+    return {
+      inFooter: footer.contains(note),
+      afterForm: absoluteTop(note) > absoluteTop(form) + form.offsetHeight,
+      afterIntro: absoluteTop(note) > absoluteTop(intro) + intro.offsetHeight,
+      hiddenBeforeFooter: document.querySelector('.intro #demoNote') === null,
+    };
+  });
+  expect(position.inFooter).toBe(true);
+  expect(position.afterForm).toBe(true);
+  expect(position.afterIntro).toBe(true);
+  expect(position.hiddenBeforeFooter).toBe(true);
+});
+test('busca mostra quantidade filtrada e formulário acompanha a seleção', async ({ page }) => {
+  const hint = page.locator('#fieldHint');
+  await expect(hint).toContainText('Escolha pelo menos uma');
+  await page.locator('#search').fill('Fotografia 03');
+  await expect(page.locator('.photo-card')).toHaveCount(1);
+  await expect(page.locator('#gallerySummary')).toHaveText('1 de 9 fotografias exibidas');
+  await page.locator('.select-toggle input').first().check();
+  await expect(hint).toHaveText('1 fotografia pronta para baixar em CSV.');
+  await expect(page.locator('#selectAll')).toBeDisabled();
+  await expect(page.locator('#selectAll')).toHaveText('Visíveis selecionadas');
+  await page.locator('#clearAll').click();
+  await expect(hint).toContainText('Escolha pelo menos uma');
+});
+
 test('barra de seleção nunca cobre as fotos e desaparece quando vazia', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 650 });
   const bar = page.locator('#selectionBar');
