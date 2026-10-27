@@ -1,0 +1,56 @@
+[
+  {
+    "id": "foto-0",
+    "title": "Fotografia 01",
+    "src": "./img/0.jpg",
+    "alt": "Fotografia 1 da coleção de demonstração"
+  },
+  {
+    "id": "foto-1",
+    "title": "Fotografia 02",
+    "src": "./img/1.jpg",
+    "alt": "Fotografia 2 da coleção de demonstração"
+  },
+  {
+    "id": "foto-2",
+    "title": "Fotografia 03",
+    "src": "./img/2.jpg",
+    "alt": "Fotografia 3 da coleção de demonstração"
+  },
+  {
+    "id": "foto-3",
+    "title": "Fotografia 04",
+    "src": "./img/3.jpg",
+    "alt": "Fotografia 4 da coleção de demonstração"
+  },
+  {
+    "id": "foto-4",
+    "title": "Fotografia 05",
+    "src": "./img/4.jpg",
+    "alt": "Fotografia 5 da coleção de demonstração"
+  },
+  {
+    "id": "foto-5",
+    "title": "Fotografia 06",
+    "src": "./img/5.jpg",
+    "alt": "Fotografia 6 da coleção de demonstração"
+  },
+  {
+    "id": "foto-6",
+    "title": "Fotografia 07",
+    "src": "./img/6.jpg",
+    "alt": "Fotografia 7 da coleção de demonstração"
+  },
+  {
+    "id": "foto-7",
+    "title": "Fotografia 08",
+    "src": "./img/7.jpg",
+    "alt": "Fotografia 8 da coleção de demonstração"
+  },
+  {
+    "id": "foto-8",
+    "title": "Fotografia 09",
+    "src": "./img/8.jpg",
+    "alt": "Fotografia 9 da coleção de demonstração"
+  }
+]
