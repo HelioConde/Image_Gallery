@@ -1,6 +1,8 @@
 name: Publish Image Gallery to GitHub Pages
 on:
-  push:
+  workflow_run:
+    workflows: ["Quality and visual audit"]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
@@ -14,102 +16,68 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 22
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Confirm static files and PHP safety
-        run: |
-          node --check js/script.js
-          npm run test:static
-          npm run test:php
-      - name: Browser dependencies
-        run: |
-          npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
-      - name: Functional browser tests
-        run: npm run test:e2e
-      - name: Visual QA across nine resolutions
-        run: npm run test:visual
-      - name: Generate visual quality report
-        if: always()
-        run: |
-          npm run qa:report
-          cat test-results/visual-audit/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Upload QA screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: image-gallery-pages-qa
-          path: |
-            test-results/
-            playwright-report/
-            visual-playwright-report/
-          if-no-files-found: ignore
-          retention-days: 21
-
   deploy:
-    needs: verify
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
     outputs:
       page_url: ${{ steps.deployment.outputs.page_url }}
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build safe static distribution
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Assemble safe static distribution
         run: |
           mkdir -p dist
           cp index.html enviado.html images.json dist/
           cp -R css js img dist/
           touch dist/.nojekyll
-          test ! -e dist/save.php
-          test ! -e dist/node_modules
+          test -f dist/index.html
           test -f dist/images.json
-      - name: Configure Pages
+          test ! -e dist/save.php
+          test ! -e dist/tests
+          test ! -e dist/node_modules
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload Pages artifact
+      - name: Upload only public assets
         uses: actions/upload-pages-artifact@v4
         with:
           path: dist
-      - name: Deploy to Pages
+      - name: Deploy verified gallery
         id: deployment
         uses: actions/deploy-pages@v4
 
   audit-live-site:
     needs: deploy
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 18
     env:
       VISUAL_BASE_URL: ${{ needs.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Wait for live Pages to become accessible
+      - name: Confirm public gallery responds
         run: |
           curl --fail --location --silent --show-error --retry 8 --retry-delay 6 --retry-all-errors "$VISUAL_BASE_URL" -o /tmp/gallery-live.html
           grep -q 'Image Gallery' /tmp/gallery-live.html
       - name: Install browser
         run: |
           npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
-      - name: Screenshot and audit real GitHub Pages URL
+          npx playwright install chromium
+      - name: Audit published URL in nine resolutions
         run: npm run test:visual
-      - name: Prepare public-site audit report
+      - name: Generate real-site visual report
         if: always()
         run: |
           npm run qa:report
           cat test-results/visual-audit/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Upload live-site visual diagnostics
+      - name: Upload live-site screenshots and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
