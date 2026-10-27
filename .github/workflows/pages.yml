@@ -1,4 +1,4 @@
-name: Deploy safe static gallery
+name: Publish Image Gallery to GitHub Pages
 on:
   push:
     branches: [main]
@@ -10,26 +10,72 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages
+  group: image-gallery-pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+  verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 22
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble public files only
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Confirm static files and PHP safety
+        run: |
+          node --check js/script.js
+          npm run test:static
+          npm run test:php
+      - name: Browser dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Functional browser tests
+        run: npm run test:e2e
+      - name: Visual QA across nine resolutions
+        run: npm run test:visual
+      - name: Generate visual quality report
+        if: always()
+        run: |
+          npm run qa:report
+          cat test-results/visual-audit/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-gallery-pages-qa
+          path: |
+            test-results/
+            playwright-report/
+            visual-playwright-report/
+          if-no-files-found: ignore
+          retention-days: 21
+
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build safe static distribution
         run: |
           mkdir -p dist
           cp index.html enviado.html images.json dist/
           cp -R css js img dist/
+          touch dist/.nojekyll
           test ! -e dist/save.php
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+          test ! -e dist/node_modules
+          test -f dist/images.json
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
-      - id: deploy
+      - name: Deploy to Pages
+        id: deployment
         uses: actions/deploy-pages@v4
