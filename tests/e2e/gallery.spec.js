@@ -160,3 +160,24 @@ test('respeita preferência por movimento reduzido', async ({ page }) => {
   const duration = await page.locator('.photo-card').first().evaluate((node) => getComputedStyle(node).transitionDuration);
   expect(duration).toContain('1e-05s');
 });
+
+test('compartilhar permite copiar manualmente quando clipboard está indisponível', async ({ page }) => {
+  await page.locator('.select-toggle input').first().check();
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+    configurable: true, value: undefined
+  }));
+  await page.locator('#shareButton').click();
+  await expect(page.locator('#shareFallback')).toBeVisible();
+  const input = page.locator('#shareUrl');
+  const url = await input.inputValue();
+  expect(url).toContain('selecionadas=foto-0');
+  expect(url).not.toContain('demo=1');
+  expect(url).not.toContain('utm_');
+  await page.locator('#shareSelect').click();
+  await expect(input).toBeFocused();
+  expect(await input.evaluate(node => node.selectionStart)).toBe(0);
+  expect(await input.evaluate(node => node.selectionEnd)).toBe(url.length);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#shareFallback')).not.toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});

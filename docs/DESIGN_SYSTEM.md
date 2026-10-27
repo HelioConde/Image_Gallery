@@ -50,3 +50,6 @@ Apenas IDs ficam armazenados no localStorage. O nome não é persistido no naveg
 
 ## QA
 Veja tests e .github/workflows/quality.yml para testes de catálogo, segurança PHP, seleção, filtros, lightbox, redução de movimentos, exportação e responsividade.
+
+## Compartilhamento progressivo (27/10/2026)
+Ao compartilhar uma seleção, o navegador tenta copiar o link usando Clipboard API. Se o navegador bloquear a API, apresenta um `dialog` HTML nativo, com foco no campo de endereço somente leitura e botão **Selecionar link**, permitindo Ctrl+C ou cópia no celular. O link contém somente IDs de fotos, sem parâmetros da URL anterior. O modal recebe os tokens visuais existentes, funciona por teclado, Escape, celular e não depende de banco de dados. O Playwright testa a indisponibilidade de clipboard e verifica o endereço oferecido.

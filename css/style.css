@@ -182,3 +182,15 @@ h1 span { color: var(--brand); }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Compartilhamento sem clipboard: alternativa nativa e acessível ao usuário. */
+.share-dialog{width:min(520px,calc(100% - 2rem));max-height:min(88dvh,720px);overflow:auto;padding:clamp(1rem,3vw,1.6rem);border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface-raised);color:var(--text);box-shadow:var(--shadow)}
+.share-dialog::backdrop{background:rgba(2,5,12,.77);backdrop-filter:blur(5px)}
+.share-dialog-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.8rem}
+.share-dialog-header h2{font-size:1.4rem;margin:0}
+.share-dialog-header .icon-button{min-height:44px;min-width:44px}
+.share-dialog p{color:var(--muted);font-size:.92rem}
+.share-dialog label{display:block;margin-bottom:.4rem;font-weight:700;font-size:.88rem}
+.share-dialog input{display:block;width:100%;min-height:48px;border-radius:var(--radius-sm);border:1px solid var(--border);padding:.75rem;background:var(--bg);color:var(--text);font-size:.88rem}
+.share-dialog-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.65rem;margin-top:1.1rem}
+@media(max-width:450px){.share-dialog-actions .button{flex:1}}

@@ -211,7 +211,13 @@ async function shareSelection() {
     await navigator.clipboard.writeText(url.href);
     toast('Link com a seleção copiado!');
   } catch {
-    toast('Não foi possível copiar. Use Exportar CSV.');
+    const dialog = $('#shareFallback');
+    const input = $('#shareUrl');
+    input.value = url.href;
+    dialog.showModal();
+    input.focus();
+    input.select();
+    toast('Copie o link selecionado para compartilhar.');
   }
 }
 async function submitSelection(event) {
@@ -325,6 +331,16 @@ function setup() {
   });
   $('#exportButton').addEventListener('click', () => exportCSV());
   $('#shareButton').addEventListener('click', shareSelection);
+  $('#shareClose').addEventListener('click', () => $('#shareFallback').close());
+  $('#shareDone').addEventListener('click', () => $('#shareFallback').close());
+  $('#shareSelect').addEventListener('click', () => {
+    const input = $('#shareUrl');
+    input.focus();
+    input.select();
+  });
+  $('#shareFallback').addEventListener('click', (event) => {
+    if (event.target === $('#shareFallback')) $('#shareFallback').close();
+  });
   $('#sendForm').addEventListener('submit', submitSelection);
   $('#lightboxClose').addEventListener('click', () => $('#lightbox').close());
   $('#lightboxPrev').addEventListener('click', () => moveLightbox(-1));
