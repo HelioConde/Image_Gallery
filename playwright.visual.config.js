@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: './tests/visual',
   timeout: 45_000,
   fullyParallel: false,
+  outputDir: 'test-results/visual-runs',
   workers: 1,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never', outputFolder: 'visual-playwright-report' }]] : 'list',
