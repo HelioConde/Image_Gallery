@@ -70,11 +70,18 @@ test('exportação CSV inclui IDs e não inclui dados pessoais', async ({ page }
   expect(csv).toContain('foto-0');
   expect(csv).not.toContain('nome');
 });
-test('envio na versão demo explica ausência de PHP', async ({ page }) => {
+test('GitHub Pages conclui seleção localmente e entrega CSV com nome', async ({ page }) => {
   await page.locator('.select-toggle input').first().check();
   await page.locator('#nome').fill('Pessoa Teste');
+  const downloadPromise = page.waitForEvent('download');
   await page.locator('#sendButton').click();
-  await expect(page.locator('#formFeedback')).toContainText('GitHub Pages');
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('image-gallery-selecao.csv');
+  const stream = await download.createReadStream();
+  const chunks = [];
+  for await (const chunk of stream) chunks.push(chunk);
+  expect(Buffer.concat(chunks).toString('utf8')).toContain('Pessoa Teste');
+  await expect(page.locator('#formFeedback')).toContainText('concluída e exportada');
 });
 test('respeita preferência por movimento reduzido', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
