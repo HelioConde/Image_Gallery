@@ -52,16 +52,30 @@ function visiblePhotos() {
 }
 function updateSummary() {
   const count = selected.size;
+  const shown = visiblePhotos();
+  const filtered = activeFilter !== 'all' || searchText.length > 0;
+  const allShownSelected = shown.length > 0 && shown.every((photo) => selected.has(photo.id));
+
   $('#selectedCount').textContent = count === 1 ? '1 foto selecionada' : count + ' fotos selecionadas';
   $('#tabCount').textContent = String(count);
-  // The selection summary stays below the gallery and never obscures photographs.
+  // Keep the selection controls below the gallery, and hide them when unused.
   $('#selectionBar').hidden = count === 0;
-  $('#gallerySummary').textContent = photos.length === 1 ? '1 fotografia disponível' : photos.length + ' fotografias disponíveis';
-  $('#selectAll').disabled = visiblePhotos().length === 0;
+  $('#gallerySummary').textContent = filtered
+    ? shown.length + ' de ' + photos.length + ' fotografias exibidas'
+    : photos.length === 1 ? '1 fotografia disponível' : photos.length + ' fotografias disponíveis';
+
+  const hint = $('#fieldHint');
+  hint.textContent = count === 0
+    ? 'Escolha pelo menos uma fotografia para continuar.'
+    : (count === 1 ? '1 fotografia pronta' : count + ' fotografias prontas') +
+      (demo ? ' para baixar em CSV.' : ' para registrar.');
+  hint.classList.toggle('has-selection', count > 0);
+
+  $('#selectAll').disabled = shown.length === 0 || allShownSelected;
+  $('#selectAll').textContent = allShownSelected ? 'Visíveis selecionadas' : 'Selecionar visíveis';
   $('#clearAll').disabled = count === 0;
   $('#shareButton').disabled = count === 0;
   $('#exportButton').disabled = count === 0;
-  $('#goSend').setAttribute('aria-disabled', count === 0 ? 'true' : 'false');
 }
 function toggleSelection(id, value) {
   if (value) selected.add(id);
@@ -90,6 +104,7 @@ function renderCard(photo) {
   const preview = element('button', 'photo-preview');
   preview.type = 'button';
   preview.setAttribute('aria-label', 'Ampliar ' + photo.title);
+  preview.title = photo.alt;
   preview.dataset.focus = photo.id + '-preview';
   const img = element('img');
   img.src = photo.src;
@@ -187,8 +202,9 @@ function exportCSV(name = '') {
 async function shareSelection() {
   if (!selected.size) return;
   const url = new URL(location.href);
-  url.searchParams.delete('demo');
-  url.searchParams.set('selecionadas', [...selected].join(','));
+  // Share only photo IDs: do not carry campaign parameters or unrelated URL data.
+  url.search = '';
+  url.searchParams.set('selecionadas', photos.filter((photo) => selected.has(photo.id)).map((photo) => photo.id).join(','));
   url.hash = '';
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
