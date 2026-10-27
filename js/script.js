@@ -163,9 +163,11 @@ function moveLightbox(delta) {
 function csvEscape(value) {
   return '"' + String(value).replaceAll('"', '""') + '"';
 }
-function exportCSV() {
+function exportCSV(name = '') {
   if (!selected.size) return toast('Selecione uma fotografia para exportar.');
-  const rows = [['id', 'fotografia'], ...photos.filter((photo) => selected.has(photo.id)).map((p) => [p.id, p.title])];
+  const rows = name
+    ? [['nome', 'id', 'fotografia'], ...photos.filter((photo) => selected.has(photo.id)).map((p) => [name, p.id, p.title])]
+    : [['id', 'fotografia'], ...photos.filter((photo) => selected.has(photo.id)).map((p) => [p.id, p.title])];
   const csv = '\uFEFF' + rows.map((row) => row.map(csvEscape).join(';')).join('\r\n') + '\r\n';
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
   const link = element('a');
@@ -201,7 +203,9 @@ async function submitSelection(event) {
   const input = $('#nome');
   if (!input.reportValidity()) return;
   if (demo) {
-    feedback('No GitHub Pages, o registro PHP não está disponível. Use Exportar CSV.', 'error');
+    exportCSV(input.value.trim());
+    feedback('Seleção concluída e exportada para este dispositivo. Nenhum dado foi enviado a um servidor.', 'success');
+    toast('Sua seleção local foi concluída!');
     return;
   }
   const button = $('#sendButton');
@@ -259,6 +263,10 @@ async function loadCatalog() {
 function setup() {
   $('#year').textContent = String(new Date().getFullYear());
   $('#demoNote').hidden = !demo;
+  if (demo) {
+    $('#demoNote').textContent = 'Modo GitHub Pages: sua seleção funciona neste navegador. Ao concluir, um arquivo CSV será baixado; não há envio a servidor.';
+    $('#sendButton').textContent = 'Concluir e baixar seleção ↗';
+  }
   $$('.tab').forEach((button) => button.addEventListener('click', () => {
     activeFilter = button.dataset.filter;
     $$('.tab').forEach((tab) => {
@@ -291,7 +299,7 @@ function setup() {
     feedback('');
     toast('Seleção limpa.');
   });
-  $('#exportButton').addEventListener('click', exportCSV);
+  $('#exportButton').addEventListener('click', () => exportCSV());
   $('#shareButton').addEventListener('click', shareSelection);
   $('#sendForm').addEventListener('submit', submitSelection);
   $('#lightboxClose').addEventListener('click', () => $('#lightbox').close());
