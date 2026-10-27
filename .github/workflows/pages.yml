@@ -54,6 +54,8 @@ jobs:
 
   deploy:
     needs: verify
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
@@ -79,3 +81,41 @@ jobs:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  audit-live-site:
+    needs: deploy
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VISUAL_BASE_URL: ${{ needs.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Wait for live Pages to become accessible
+        run: |
+          curl --fail --location --silent --show-error --retry 8 --retry-delay 6 --retry-all-errors "$VISUAL_BASE_URL" -o /tmp/gallery-live.html
+          grep -q 'Image Gallery' /tmp/gallery-live.html
+      - name: Install browser
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Screenshot and audit real GitHub Pages URL
+        run: npm run test:visual
+      - name: Prepare public-site audit report
+        if: always()
+        run: |
+          npm run qa:report
+          cat test-results/visual-audit/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload live-site visual diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-gallery-live-site-qa
+          path: |
+            test-results/
+            visual-playwright-report/
+          if-no-files-found: ignore
+          retention-days: 21
