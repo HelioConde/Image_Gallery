@@ -161,7 +161,10 @@ function moveLightbox(delta) {
   updateLightbox();
 }
 function csvEscape(value) {
-  return '"' + String(value).replaceAll('"', '""') + '"';
+  const text = String(value);
+  // Prevent spreadsheet formula execution when a user supplies a CSV name.
+  const safe = /^[\\t\\r\\n ]*[=+@-]/.test(text) ? "'" + text : text;
+  return '"' + safe.replaceAll('"', '""') + '"';
 }
 function exportCSV(name = '') {
   if (!selected.size) return toast('Selecione uma fotografia para exportar.');
@@ -266,6 +269,9 @@ function setup() {
   if (demo) {
     $('#demoNote').textContent = 'Modo GitHub Pages: sua seleção funciona neste navegador. Ao concluir, um arquivo CSV será baixado; não há envio a servidor.';
     $('#sendButton').textContent = 'Concluir e baixar seleção ↗';
+    $('#sendTitle').textContent = 'Pronto para concluir?';
+    $('.details-copy > p').textContent = 'Confira suas escolhas, informe seu nome e baixe um arquivo CSV com sua seleção, sem precisar de servidor.';
+    $('.privacy-note').textContent = 'Nenhuma informação é enviada a um servidor. Apenas as fotos selecionadas ficam salvas neste navegador.';
   }
   $$('.tab').forEach((button) => button.addEventListener('click', () => {
     activeFilter = button.dataset.filter;
