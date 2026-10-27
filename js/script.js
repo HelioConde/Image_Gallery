@@ -163,7 +163,7 @@ function moveLightbox(delta) {
 function csvEscape(value) {
   const text = String(value);
   // Prevent spreadsheet formula execution when a user supplies a CSV name.
-  const safe = /^[\\t\\r\\n ]*[=+@-]/.test(text) ? "'" + text : text;
+  const safe = /^\s*[=+@-]/.test(text) ? "'" + text : text;
   return '"' + safe.replaceAll('"', '""') + '"';
 }
 function exportCSV(name = '') {
