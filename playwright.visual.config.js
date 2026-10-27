@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const remoteBaseURL = process.env.VISUAL_BASE_URL?.replace(/\\/?$/, '/');
+
 export default defineConfig({
   testDir: './tests/visual',
   timeout: 45_000,
@@ -10,7 +12,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'], ['html', { open: 'never', outputFolder: 'visual-playwright-report' }]] : 'list',
   use: {
     ...devices['Desktop Chrome'],
-    baseURL: process.env.VISUAL_BASE_URL || 'http://127.0.0.1:4173',
+    baseURL: remoteBaseURL || 'http://127.0.0.1:4173/',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     reducedMotion: 'reduce',
