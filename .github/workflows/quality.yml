@@ -1,0 +1,44 @@
+name: Quality
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JavaScript
+        run: |
+          node --check js/script.js
+          node --check tests/e2e/gallery.spec.js
+      - name: Static catalog and HTML checks
+        run: npm run test:static
+      - name: PHP security integration
+        run: npm run test:php
+      - name: Install QA dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Run browser QA
+        run: npm run test:e2e
+      - name: Upload test captures and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-gallery-playwright
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 10
