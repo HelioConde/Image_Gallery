@@ -41,7 +41,7 @@
       <div class="filterbar">
         <div class="tabs" role="group" aria-label="Filtrar fotografias">
           <button type="button" class="tab is-active" data-filter="all" aria-pressed="true">Todas</button>
-          <button type="button" class="tab" data-filter="selected" aria-pressed="false">Selecionadas <span id="tabCount">0</span></button>
+          <button type="button" class="tab" data-filter="selected" aria-pressed="false">Selecionadas <span id="tabCount" aria-live="polite" aria-atomic="true">0</span></button>
           <button type="button" class="tab" data-filter="favorites" aria-pressed="false">Favoritas</button>
         </div>
         <label class="search">
@@ -58,6 +58,17 @@
         <button class="button button-secondary" id="resetFilters" type="button">Mostrar todas</button>
       </div>
     </section>
+  <div class="selection-bar" id="selectionBar" aria-label="Resumo da seleção" hidden>
+    <div class="selection-details">
+      <div class="selection-icon" aria-hidden="true">✓</div>
+      <div><strong id="selectedCount" aria-live="polite">0 fotos selecionadas</strong><span>Sua seleção fica neste navegador</span></div>
+    </div>
+    <div class="selection-actions">
+      <button class="button button-quiet" id="shareButton" type="button">Compartilhar</button>
+      <button class="button button-secondary" id="exportButton" type="button">Exportar CSV</button>
+      <a href="#enviar" class="button button-primary" id="goSend">Concluir <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
     <section class="details" id="enviar" aria-labelledby="sendTitle">
       <div class="details-copy">
         <span class="eyebrow">Quase lá</span>
@@ -77,17 +88,6 @@
   <footer class="site-footer">
     <div class="container footer-inner"><span>© <span id="year"></span> Image Gallery</span><span>Feito para escolher o que importa.</span></div>
   </footer>
-  <div class="selection-bar" id="selectionBar" aria-label="Resumo da seleção">
-    <div class="selection-details">
-      <div class="selection-icon" aria-hidden="true">✓</div>
-      <div><strong id="selectedCount" aria-live="polite">0 fotos selecionadas</strong><span>Sua seleção fica neste navegador</span></div>
-    </div>
-    <div class="selection-actions">
-      <button class="button button-quiet" id="shareButton" type="button">Compartilhar</button>
-      <button class="button button-secondary" id="exportButton" type="button">Exportar CSV</button>
-      <a href="#enviar" class="button button-primary" id="goSend">Concluir <span aria-hidden="true">↗</span></a>
-    </div>
-  </div>
   <dialog id="lightbox" class="lightbox" aria-label="Visualização ampliada">
     <div class="lightbox-header">
       <span id="lightboxPosition" aria-live="polite">Fotografia</span>
