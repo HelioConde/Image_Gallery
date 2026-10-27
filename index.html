@@ -105,6 +105,19 @@
       <button type="button" class="button button-secondary button-small" id="lightboxFavorite" aria-pressed="false">♡ Favoritar</button>
     </div>
   </dialog>
+  <dialog id="shareFallback" class="share-dialog" aria-labelledby="shareTitle" aria-describedby="shareHelp">
+    <div class="share-dialog-header">
+      <h2 id="shareTitle">Link da sua seleção</h2>
+      <button type="button" class="icon-button" id="shareClose" aria-label="Fechar link de compartilhamento">✕</button>
+    </div>
+    <p id="shareHelp">Não foi possível copiar automaticamente. Selecione e copie o endereço abaixo para enviar a alguém. Ele contém apenas os IDs das fotos selecionadas.</p>
+    <label for="shareUrl">Endereço para compartilhar</label>
+    <input id="shareUrl" type="text" readonly spellcheck="false" autocomplete="off">
+    <div class="share-dialog-actions">
+      <button type="button" class="button button-secondary" id="shareSelect">Selecionar link</button>
+      <button type="button" class="button button-primary" id="shareDone">Concluir</button>
+    </div>
+  </dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

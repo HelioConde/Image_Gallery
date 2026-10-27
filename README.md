@@ -72,3 +72,6 @@ A integração contínua executa testes funcionais, 26 capturas em 10 resoluçõ
 O nome só é enviado quando a pessoa submete o formulário em um PHP configurado. O armazenamento local tem apenas IDs. Os registros PHP incluem nome, IDs, data e protocolo. Futuros aprimoramentos opcionais: miniaturas WebP dedicadas para catálogos grandes, autorização multiusuário, painel administrativo autenticado e PDF. **Essas opções não estão implementadas**.
 
 Criado por [Hélio Conde](https://github.com/HelioConde). Consulte [o guia de design](docs/DESIGN_SYSTEM.md).
+
+## Compartilhar mesmo sem Clipboard API
+Se o navegador bloquear a cópia automática do link, a galeria abre uma janela acessível com o endereço pronto para selecionar e copiar manualmente. O link compartilhável contém apenas os IDs das fotografias selecionadas, nunca o nome informado no formulário. Testes Playwright cobrem o fallback em desktop e mobile.
