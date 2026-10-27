@@ -1,0 +1,56 @@
+name: Quality and visual audit
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: JavaScript syntax
+        run: |
+          node --check js/script.js
+          node --check tests/e2e/gallery.spec.js
+          node --check tests/visual/gallery-audit.spec.js
+          node --check scripts/build-visual-report.mjs
+      - name: Test static catalog
+        run: npm run test:static
+      - name: Test PHP security
+        run: npm run test:php
+      - name: Install test dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Functional Playwright tests
+        run: npm run test:e2e
+      - name: Automatic full-page captures and layout audit
+        run: npm run test:visual
+      - name: Generate screenshot and error reports
+        if: always()
+        run: |
+          npm run qa:report
+          cat test-results/visual-audit/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload screenshots, JS errors and layout diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-gallery-quality
+          path: |
+            test-results/
+            playwright-report/
+            visual-playwright-report/
+          if-no-files-found: ignore
+          retention-days: 21

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "foto-0",
+    "title": "Fotografia 01",
+    "src": "./img/0.jpg",
+    "alt": "Patinhas rosadas de um gato descansando sobre uma manta cinza."
+  },
+  {
+    "id": "foto-1",
+    "title": "Fotografia 02",
+    "src": "./img/1.jpg",
+    "alt": "Borboletas azuis em um jardim de floresta com fundo escuro."
+  },
+  {
+    "id": "foto-2",
+    "title": "Fotografia 03",
+    "src": "./img/2.jpg",
+    "alt": "Floresta com troncos altos e folhagem dourada iluminada pelo sol."
+  },
+  {
+    "id": "foto-3",
+    "title": "Fotografia 04",
+    "src": "./img/3.jpg",
+    "alt": "Ilhota arborizada refletida em um lago cercado por montanhas."
+  },
+  {
+    "id": "foto-4",
+    "title": "Fotografia 05",
+    "src": "./img/4.jpg",
+    "alt": "Flores vermelhas e amarelas em um campo iluminado pela luz do sol."
+  },
+  {
+    "id": "foto-5",
+    "title": "Fotografia 06",
+    "src": "./img/5.jpg",
+    "alt": "Árvore solitária em silhueta diante de um pôr do sol vermelho e violeta."
+  },
+  {
+    "id": "foto-6",
+    "title": "Fotografia 07",
+    "src": "./img/6.jpg",
+    "alt": "Gatinho laranja deitado em uma superfície clara, olhando para a câmera."
+  },
+  {
+    "id": "foto-7",
+    "title": "Fotografia 08",
+    "src": "./img/7.jpg",
+    "alt": "Cachorro castanho e branco deitado com as patas à frente, olhando para o lado."
+  },
+  {
+    "id": "foto-8",
+    "title": "Fotografia 09",
+    "src": "./img/8.jpg",
+    "alt": "Montanha de topo nevado sob céu nublado, cercada por planície rochosa."
+  }
+]
