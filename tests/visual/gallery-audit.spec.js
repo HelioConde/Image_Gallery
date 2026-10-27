@@ -100,7 +100,7 @@ async function audit(page, data, section, filename) {
   let metrics = null;
   const screenshots = [];
   try {
-    const target = section === 'inicio' ? '/?demo=1' : '/enviado.html';
+    const target = section === 'inicio' ? './?demo=1' : './enviado.html';
     await page.goto(target, { waitUntil: 'load' });
     if (section === 'inicio') {
       await expect(page.locator('.photo-card')).toHaveCount(9);
